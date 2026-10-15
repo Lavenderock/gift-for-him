@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Special Gift For You</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        roseRed: {
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            200: '#fecdd3',
+                            300: '#fda4af',
+                            400: '#fb7185',
+                            500: '#f43f5e',
+                            600: '#e11d48',
+                            700: '#be123c',
+                            800: '#9f1239',
+                            900: '#881337',
+                            950: '#4c0519',
+                        },
+                        darkBg: '#0f0205'
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                        script: ['Great Vibes', 'cursive']
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'spin-slow': 'spin 20s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+                            '50%': { transform: 'translateY(-15px) rotate(3deg)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #0f0205;
+            color: #fecdd3;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        .font-script { font-family: 'Great Vibes', cursive; }
+        .font-serif { font-family: 'Playfair Display', serif; }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a0308;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #9f1239;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #e11d48;
+        }
+
+        /* Petal Falling Animation */
+        .petal {
+            position: absolute;
+            background: linear-gradient(135deg, #fb7185 0%, #e11d48 100%);
+            border-radius: 150% 0 150% 0;
+            animation: fall linear infinite;
+            opacity: 0.8;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-10vh) translateX(0) rotate(0deg);
+                opacity: 1;
+            }
+            50% {
+                transform: translateY(50vh) translateX(50px) rotate(180deg);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(110vh) translateX(-30px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Gift box lid opening animation */
+        .gift-box-container.open .lid {
+            transform: translateY(-120px) rotate(-15deg) scale(1.1);
+            opacity: 0;
+        }
+        .gift-box-container.open .box-body {
+            transform: scale(1.05);
+        }
+        .lid {
+            transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform-origin: bottom left;
+        }
+        .box-body {
+            transition: all 0.6s ease;
+        }
+
+        /* Glassmorphism */
+        .glass-panel {
+            background: rgba(45, 6, 15, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(244, 63, 94, 0.2);
+        }
+        
+        .glass-card {
+            background: rgba(30, 4, 10, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(251, 113, 133, 0.15);
+        }
+
+        /* Glow effects */
+        .glow-red {
+            box-shadow: 0 0 35px rgba(225, 29, 72, 0.4);
+        }
+        .glow-text {
+            text-shadow: 0 0 20px rgba(251, 113, 133, 0.6);
+        }
+
+        /* Phone-style lock screen */
+        .phone-lockscreen {
+            background:
+                radial-gradient(ellipse at 50% 18%, rgba(190, 18, 60, 0.30), transparent 42%),
+                linear-gradient(160deg, rgba(45, 6, 18, 0.96), rgba(15, 2, 5, 0.99) 70%);
+            border: 1px solid rgba(253, 164, 175, 0.28);
+            box-shadow: 0 25px 90px rgba(0, 0, 0, 0.55), inset 0 0 35px rgba(244, 63, 94, 0.05);
+        }
+        .lockscreen-glow {
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            border-radius: 9999px;
+            filter: blur(65px);
+            pointer-events: none;
+        }
+        .lockscreen-glow-one { top: 12%; left: -100px; background: rgba(225, 29, 72, 0.18); }
+        .lockscreen-glow-two { bottom: 8%; right: -110px; background: rgba(190, 18, 60, 0.20); }
+        .lock-icon-ring {
+            width: 62px;
+            height: 62px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 1px solid rgba(253, 164, 175, 0.30);
+            background: rgba(159, 18, 57, 0.25);
+            box-shadow: 0 0 32px rgba(225, 29, 72, 0.20);
+        }
+        .passcode-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            border: 1px solid rgba(253, 164, 175, 0.7);
+            background: transparent;
+            transition: background .18s ease, transform .18s ease, box-shadow .18s ease;
+        }
+        .passcode-dot.filled {
+            background: #fda4af;
+            transform: scale(1.08);
+            box-shadow: 0 0 10px rgba(251, 113, 133, 0.5);
+        }
+        .keypad-key, .keypad-action {
+            height: 62px;
+            width: 100%;
+            border-radius: 9999px;
+            color: #fff1f2;
+            transition: background .18s ease, transform .12s ease, border-color .18s ease;
+        }
+        .keypad-key {
+            background: rgba(251, 113, 133, 0.10);
+            border: 1px solid rgba(253, 164, 175, 0.15);
+            font-size: 1.55rem;
+            font-weight: 400;
+        }
+        .keypad-key:hover, .keypad-action:hover {
+            background: rgba(225, 29, 72, 0.28);
+            border-color: rgba(253, 164, 175, 0.4);
+        }
+        .keypad-key:active, .keypad-action:active { transform: scale(.94); }
+        .keypad-action {
+            font-size: 1rem;
+            color: rgba(255, 228, 230, 0.85);
+            background: rgba(251, 113, 133, 0.04);
+            border: 1px solid transparent;
+        }
+        .unlock-key {
+            background: rgba(225, 29, 72, 0.24);
+            border-color: rgba(253, 164, 175, 0.22);
+        }
+        @media (max-width: 380px) {
+            .phone-lockscreen { min-height: 690px; padding-left: 1.25rem; padding-right: 1.25rem; }
+            .keypad-key, .keypad-action { height: 55px; }
+        }
+
+        /* Scroll reveal, story timeline, and memory photo rotation */
+        .reveal-on-scroll { opacity: 0; transform: translateY(24px); transition: opacity .8s ease, transform .8s cubic-bezier(.2,.65,.3,1); }
+        .reveal-on-scroll.is-visible { opacity: 1; transform: translateY(0); }
+        .story-timeline { position: relative; padding-left: 32px; }
+        .story-timeline::before { content: ''; position: absolute; left: 11px; top: 10px; bottom: 12px; width: 1px; background: linear-gradient(to bottom, rgba(251,113,133,.12), rgba(251,113,133,.8), rgba(251,113,133,.12)); }
+        .story-event { position: relative; margin-bottom: 22px; }
+        .story-event:last-child { margin-bottom: 0; }
+        .story-marker { position: absolute; left: -32px; top: 22px; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 50%; color: #fecdd3; font-size: 10px; background: #4c0519; border: 1px solid rgba(251,113,133,.65); box-shadow: 0 0 18px rgba(225,29,72,.2); z-index: 1; }
+        
+        /* 3D circular carousel for Memory Gallery */
+        .memory-orbit-wrap {
+            --orbit-radius: 330px;
+            --orbit-card-width: 220px;
+            --orbit-card-height: 350px;
+            position: relative;
+            width: 100%;
+            height: 470px;
+            perspective: 1400px;
+            perspective-origin: 50% 45%;
+            overflow: hidden;
+            isolation: isolate;
+            -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+            mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+        }
+        .memory-orbit {
+            position: absolute;
+            width: var(--orbit-card-width);
+            height: var(--orbit-card-height);
+            top: 42px;
+            left: 50%;
+            margin-left: calc(var(--orbit-card-width) / -2);
+            transform-style: preserve-3d;
+            animation: memoryOrbitSpin 32s linear infinite;
+        }
+        .memory-orbit:hover { animation-play-state: paused; }
+        .orbit-card {
+            position: absolute;
+            inset: 0;
+            width: var(--orbit-card-width);
+            height: var(--orbit-card-height);
+            overflow: hidden;
+            border-radius: 20px;
+            border: 1px solid rgba(251, 113, 133, .45);
+            background: linear-gradient(160deg, rgba(76,5,25,.96), rgba(20,3,9,.98));
+            box-shadow: 0 18px 45px rgba(0,0,0,.45), 0 0 25px rgba(225,29,72,.12);
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .orbit-card-photo { height: 67%; overflow: hidden; position: relative; }
+        .orbit-card-photo::after { content: ''; position: absolute; inset: 45% 0 0; background: linear-gradient(to bottom, transparent, rgba(25,3,10,.85)); pointer-events: none; }
+        .orbit-card-photo img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .6s ease; }
+        .orbit-card:hover .orbit-card-photo img { transform: scale(1.06); }
+        .orbit-card-copy { height: 33%; padding: 13px 15px 15px; text-align: left; }
+        .orbit-card-copy span { display: block; color: #fda4af; font-size: 9px; font-weight: 700; letter-spacing: .17em; text-transform: uppercase; margin-bottom: 7px; }
+        .orbit-card-copy h3 { color: #fff1f2; font-family: Georgia, serif; font-size: 17px; line-height: 1.15; font-weight: 600; }
+        .orbit-card-copy p { color: rgba(254,205,211,.72); font-size: 10px; line-height: 1.5; margin-top: 7px; }
+        .memory-orbit-hint { color: rgba(253,164,175,.55); font-size: 10px; text-align: center; letter-spacing: .13em; text-transform: uppercase; margin-top: 4px; }
+        @keyframes memoryOrbitSpin { from { transform: rotateY(0deg); } to { transform: rotateY(-360deg); } }
+        @media (max-width: 640px) {
+            .memory-orbit-wrap { --orbit-radius: 220px; --orbit-card-width: 172px; --orbit-card-height: 290px; height: 390px; perspective: 1000px; }
+            .memory-orbit { top: 35px; }
+            .orbit-card { border-radius: 16px; }
+            .orbit-card-copy { padding: 10px 11px; }
+            .orbit-card-copy h3 { font-size: 14px; }
+            .orbit-card-copy p { font-size: 9px; }
+            .orbit-card-copy span { font-size: 8px; }
+        }
+        @media (prefers-reduced-motion: reduce) { .memory-orbit { animation-duration: 90s; } }
+        .passcode-shake { animation: passcodeShake .32s ease; }
+        @keyframes passcodeShake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+        @media (prefers-reduced-motion: reduce) { .reveal-on-scroll, .memory-card img { transition: none; } }
+    </style>
+</head>
+<body class="min-h-screen relative selection:bg-roseRed-600 selection:text-white"[cite: 1]>
+
+    <!-- Floating Petals Container -->
+    <div id="petals-container" class="fixed inset-0 pointer-events-none overflow-hidden z-20"></div>
+
+    <!-- Background Ambient Glows -->
+    <div class="fixed top-0 left-1/4 w-96 h-96 bg-roseRed-800/20 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="fixed bottom-0 right-1/4 w-96 h-96 bg-roseRed-600/15 rounded-full blur-3xl pointer-events-none"></div>
+
+    <!-- MAIN APP CONTAINER -->
+    <main class="relative z-30">
+
+        <!-- ================= PAGE 1: PHONE-STYLE LOCK SCREEN ================= -->
+        <section id="page-password" class="min-h-screen flex items-center justify-center p-4 transition-opacity duration-700 relative">
+            <div class="phone-lockscreen relative w-full max-w-sm min-h-[720px] sm:min-h-[760px] rounded-[2.8rem] overflow-hidden flex flex-col items-center px-7 py-10 text-center">
+                <div class="lockscreen-glow lockscreen-glow-one"></div>
+                <div class="lockscreen-glow lockscreen-glow-two"></div>
+
+                <div class="relative z-10 w-full flex items-center justify-between text-xs text-roseRed-100/90 px-2">
+                    <span id="lockscreen-status-time" class="font-semibold tracking-wide">9:41</span>
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-signal"></i>
+                        <i class="fa-solid fa-wifi"></i>
+                        <i class="fa-solid fa-battery-three-quarters text-base"></i>
+                    </div>
+                </div>
+
+                <div class="relative z-10 mt-12 sm:mt-14">
+                    <div class="lock-icon-ring mx-auto mb-5">
+                        <i id="lock-icon" class="fa-solid fa-lock text-2xl text-roseRed-100"></i>
+                    </div>
+                    <p class="text-roseRed-200/80 text-xs uppercase tracking-[0.32em] font-medium">A little something for you</p>
+                    <div id="lockscreen-clock" class="font-serif text-6xl sm:text-7xl font-light tracking-tight text-white mt-3 glow-text">9:41</div>
+                    <p id="lockscreen-date" class="text-roseRed-100/80 text-sm mt-2">Monday, October 12</p>
+                </div>
+
+                <div class="relative z-10 mt-10 w-full">
+                    <h1 class="font-serif text-2xl sm:text-3xl text-white">Enter Passcode</h1>
+                    <p class="text-roseRed-200/75 text-sm mt-2 mb-6">Unlock a little world made just for you.</p>
+
+                    <div id="passcode-dots" class="flex justify-center gap-4 mb-7" aria-label="Passcode entry">
+                        <span class="passcode-dot"></span><span class="passcode-dot"></span>
+                        <span class="passcode-dot"></span><span class="passcode-dot"></span>
+                        <span class="passcode-dot"></span><span class="passcode-dot"></span>
+                    </div>
+
+                    <form id="password-form" onsubmit="handlePasswordSubmit(event)" class="w-full" autocomplete="off">
+                        <input type="password" id="secret-input" inputmode="numeric" autocomplete="off" maxlength="6"
+                            aria-label="Secret passcode" class="sr-only" />
+                        <div class="passcode-keypad grid grid-cols-3 gap-x-5 gap-y-3 max-w-[280px] mx-auto">
+                            <button type="button" class="keypad-key" onclick="addPasscodeDigit('1')">1</button>
+                            <button type="button" class="keypad-key" onclick="addPasscodeDigit('2')">2</button>
+                            <button type="button" class="keypad-key" onclick="addPasscodeDigit('3')">3</button>
+                            <button type="button" class="keypad-key" onclick="addPasscodeDigit('4')">4</button>
+                            <button type="button" class="keypad-key" onclick="addPasscodeDigit('5')">5</button>
+                            <button type="button" class="keypad-key" onclick="addPasscodeDigit('6')">6</button>
+                            <button type="button" class="keypad-key" onclick="addPasscodeDigit('7')">7</button>
+                            <button type="button" class="keypad-key" onclick="addPasscodeDigit('8')">8</button>
+                            <button type="button" class="keypad-key" onclick="addPasscodeDigit('9')">9</button>
+                            <button type="button" class="keypad-action" onclick="clearPasscode()" aria-label="Delete last digit"><i class="fa-solid fa-delete-left"></i></button>
+                            <button type="button" class="keypad-key" onclick="addPasscodeDigit('0')">0</button>
+                            <span aria-hidden="true"></span>
+                        </div>
+                    </form>
+
+                    <div id="error-message" class="mt-5 text-roseRed-300 text-sm hidden font-medium">
+                        <i class="fa-solid fa-circle-exclamation mr-1"></i> That's not the code. Try again, love.
+                    </div>
+                    <p class="text-roseRed-200/45 text-[10px] uppercase tracking-[0.25em] mt-7">Only you know the way in</p>
+                </div>
+
+                <div class="relative z-10 mt-auto pt-8 w-28">
+                    <div class="h-1.5 w-full rounded-full bg-roseRed-100/65"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 2: GIFT OPENING & MUSIC ================= -->
+        <section id="page-gift" class="min-h-screen hidden flex-col items-center justify-center p-6 text-center transition-opacity duration-700">
+            <div class="max-w-xl w-full mx-auto glass-panel p-8 sm:p-12 rounded-3xl relative overflow-hidden glow-red">
+                
+                <h2 class="font-serif text-3xl sm:text-4xl font-bold text-white mb-2 glow-text">A Special Delivery For You</h2>
+                <p class="text-roseRed-200 text-sm sm:text-base mb-8">Tap the gift box to open your surprise. A little melody will begin playing.</p>
+
+                <!-- Interactive Gift Box -->
+                <div id="gift-box" onclick="openGiftBox()" class="gift-box-container cursor-pointer relative w-48 h-48 mx-auto my-6 select-none group">
+                    <!-- Bursting flowers container -->
+                    <div id="flower-burst" class="absolute inset-0 pointer-events-none z-30 flex items-center justify-center"></div>
+
+                    <!-- Box Lid -->
+                    <div class="lid absolute top-0 left-0 w-full h-14 bg-gradient-to-r from-roseRed-700 via-roseRed-500 to-roseRed-700 rounded-t-2xl shadow-lg z-20 flex items-center justify-center border-b border-roseRed-400/40 group-hover:scale-105 transition-transform">
+                        <!-- Ribbon Bow -->
+                        <div class="absolute -top-6 flex items-center justify-center">
+                            <div class="w-10 h-6 bg-roseRed-400 rounded-full -rotate-45 -mr-3 border border-roseRed-200"></div>
+                            <div class="w-8 h-8 bg-roseRed-300 rounded-full z-10 shadow-md"></div>
+                            <div class="w-10 h-6 bg-roseRed-400 rounded-full rotate-45 -ml-3 border border-roseRed-200"></div>
+                        </div>
+                        <div class="w-6 h-full bg-roseRed-300/80 mx-auto"></div>
+                    </div>
+
+                    <!-- Box Body -->
+                    <div class="box-body absolute bottom-0 left-0 w-full h-36 bg-gradient-to-b from-roseRed-800 to-roseRed-950 rounded-b-2xl shadow-2xl z-10 flex items-center justify-center border border-roseRed-600/50 group-hover:brightness-110 transition-all">
+                        <div class="w-6 h-full bg-roseRed-600/80 mx-auto shadow-inner"></div>
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <span class="bg-darkBg/80 px-4 py-2 rounded-full text-xs text-roseRed-200 font-medium border border-roseRed-500/30">Tap to Open! ✨</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Proceed Button -->
+                <div id="proceed-btn-container" class="mt-6 opacity-0 pointer-events-none transition-all duration-700">
+                    <button onclick="goToPage3()" class="px-8 py-3 bg-gradient-to-r from-roseRed-600 to-roseRed-500 hover:from-roseRed-500 hover:to-roseRed-400 text-white font-semibold rounded-2xl shadow-lg shadow-roseRed-900/50 transition-all transform hover:scale-105">
+                        Read Your Letter!<i class="fa-solid fa-heart ml-2 text-roseRed-200 animate-pulse"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 3: MAIN EXPERIENCE ================= -->
+        <section id="page-main" class="hidden min-h-screen p-4 sm:p-8 md:p-12 transition-opacity duration-700 max-w-5xl mx-auto space-y-20">
+            
+            <!-- Top Hero Banner / Countdown -->
+            <div class="text-center space-y-4 pt-8">
+                <span class="px-4 py-1.5 rounded-full bg-roseRed-950/80 border border-roseRed-500/30 text-roseRed-300 text-xs uppercase tracking-widest font-semibold inline-block">
+                    Happy Birthday, My Love
+                </span>
+                <h1 class="font-serif text-4xl sm:text-6xl font-extrabold text-white glow-text leading-tight">
+                    Forever & Always Yours
+                </h1>
+                <p class="text-roseRed-200/80 max-w-2xl mx-auto text-sm sm:text-base">
+                    Every second spent with you is a gift to my soul. Scroll down to discover all the little pieces of my heart compiled just for you today.
+                </p>
+
+                <!-- Live Relationship Timer -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-md mx-auto pt-4">
+                    <div class="glass-card p-3 rounded-2xl text-center">
+                        <span id="days-count" class="font-serif text-2xl font-bold text-white">7670</span>
+                        <p class="text-roseRed-300 text-xs uppercase tracking-wider">Days</p>
+                    </div>
+                    <div class="glass-card p-3 rounded-2xl text-center">
+                        <span id="hours-count" class="font-serif text-2xl font-bold text-white">00</span>
+                        <p class="text-roseRed-300 text-xs uppercase tracking-wider">Hours</p>
+                    </div>
+                    <div class="glass-card p-3 rounded-2xl text-center">
+                        <span id="mins-count" class="font-serif text-2xl font-bold text-white">00</span>
+                        <p class="text-roseRed-300 text-xs uppercase tracking-wider">Minutes</p>
+                    </div>
+                    <div class="glass-card p-3 rounded-2xl text-center">
+                        <span id="secs-count" class="font-serif text-2xl font-bold text-white">00</span>
+                        <p class="text-roseRed-300 text-xs uppercase tracking-wider">Seconds</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aesthetic Long Scrollable Letter -->
+            <div class="glass-panel p-8 sm:p-12 rounded-3xl relative shadow-2xl border border-roseRed-500/20">
+                <div class="absolute top-4 right-6 text-roseRed-500/30 font-script text-6xl pointer-events-none">Love Letter</div>
+                
+                <h2 class="font-serif text-2xl sm:text-3xl font-bold text-white mb-6 flex items-center space-x-3">
+                    <i class="fa-solid fa-feather-pointed text-roseRed-400"></i>
+                    <span>To the Light of My Life</span>
+                </h2>
+
+                <div class="space-y-6 text-roseRed-100/90 leading-relaxed font-light text-base sm:text-lg">
+                    <p class="first-letter:text-5xl first-letter:font-serif first-letter:font-bold first-letter:text-roseRed-400 first-letter:mr-3 first-letter:float-left">
+                        My dearest, Januar. on this truly magnificent day when the world was blessed with your arrival, I find myself searching for words grand enough to capture what you mean to me. Yet, no vocabulary feels sufficient when describing someone who transformed ordinary days into breathtaking poetry.
+                    </p>
+                    <p>
+                        From the very first moment our paths crossed, my universe aligned in ways I never knew were possible. Your messages is my favorite things to read, your presence is my safest harbor, and your gentle soul is the greatest comfort I have ever known. In a world full of noise, you are my absolute peace.
+                    </p>
+                    <p>
+                        As you step into this new year of life, my wish for you is that you experience nothing but joy, success, and fulfillment in all that you do. May this year bring you countless blessings and opportunities to grow and chase your dreams. I know you have an incredible journey ahead of you, and I can't wait to be right by your side as you navigate it all. Janu, I want you to know just how deeply I care for you and how much you mean to me.
+                    </p>
+                    <p>
+                        Thank you for loving me with all my flaws, for believing in my wildest dreams, and for holding my heart through every high and low. Today, as you celebrate another year of grace and brilliance, my another loudest wish is that you can see yourself through my hearteyes—perfect, cherished, and infinitely loved.
+                    </p>
+                    <p>
+                        Happy birthday, Janu. I'm so, so glad you were born.
+                    </p>
+                    <p class="font-script text-2xl sm:text-3xl text-roseRed-300 pt-4 text-right">
+                        With all my heart, <br>Sena Darlington
+                    </p>
+                </div>
+            </div>
+
+            <!-- Interactive Garden of My Wishes & Jar -->
+            <div class="glass-panel p-8 sm:p-10 rounded-3xl space-y-6">
+                <div class="text-center max-w-xl mx-auto">
+                    <span class="text-roseRed-400 text-xs font-semibold uppercase tracking-widest">.☘︎ ݁˖</span>
+                    <h2 class="font-serif text-3xl font-bold text-white mt-1">A Garden of My Wishes For You</h2>
+                    <p class="text-roseRed-200/80 text-sm mt-2">Click on the items below to unlock secret love notes and birthday blessings.</p>
+                </div>
+
+                <!-- Interactive Elements Grid -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4">
+                    <div onclick="openWish(1)" class="glass-card p-6 rounded-2xl text-center cursor-pointer hover:border-roseRed-500 hover:bg-roseRed-900/40 transition-all transform hover:-translate-y-1 group">
+                        <div class="w-12 h-12 mx-auto mb-3 rounded-full bg-roseRed-800/60 flex items-center justify-center text-roseRed-300 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-seedling text-xl"></i>
+                        </div>
+                        <h4 class="font-medium text-white text-sm">Wish #1</h4>
+                        <span class="text-xs text-roseRed-300/70">Click to reveal</span>
+                    </div>
+
+                    <div onclick="openWish(2)" class="glass-card p-6 rounded-2xl text-center cursor-pointer hover:border-roseRed-500 hover:bg-roseRed-900/40 transition-all transform hover:-translate-y-1 group">
+                        <div class="w-12 h-12 mx-auto mb-3 rounded-full bg-roseRed-800/60 flex items-center justify-center text-roseRed-300 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-spa text-xl"></i>
+                        </div>
+                        <h4 class="font-medium text-white text-sm">Wish #2</h4>
+                        <span class="text-xs text-roseRed-300/70">Click to reveal</span>
+                    </div>
+
+                    <div onclick="openWish(3)" class="glass-card p-6 rounded-2xl text-center cursor-pointer hover:border-roseRed-500 hover:bg-roseRed-900/40 transition-all transform hover:-translate-y-1 group">
+                        <div class="w-12 h-12 mx-auto mb-3 rounded-full bg-roseRed-800/60 flex items-center justify-center text-roseRed-300 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-heart text-xl"></i>
+                        </div>
+                        <h4 class="font-medium text-white text-sm">Wish #3</h4>
+                        <span class="text-xs text-roseRed-300/70">Click to reveal</span>
+                    </div>
+
+                    <div onclick="openWish(4)" class="glass-card p-6 rounded-2xl text-center cursor-pointer hover:border-roseRed-500 hover:bg-roseRed-900/40 transition-all transform hover:-translate-y-1 group">
+                        <div class="w-12 h-12 mx-auto mb-3 rounded-full bg-roseRed-800/60 flex items-center justify-center text-roseRed-300 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-star text-xl"></i>
+                        </div>
+                        <h4 class="font-medium text-white text-sm">Wish #4</h4>
+                        <span class="text-xs text-roseRed-300/70">Click to reveal</span>
+                    </div>
+                </div>
+
+                <!-- Wish Display Box -->
+                <div id="wish-display" class="hidden mt-6 p-6 rounded-2xl bg-roseRed-950/80 border border-roseRed-500/40 text-center animate-pulse">
+                    <p id="wish-text" class="text-white font-serif text-lg italic"></p>
+                </div>
+            </div>
+
+            <!-- A Little Bit of Our Story: vertical timeline -->
+            <section id="our-story" class="story-section reveal-on-scroll space-y-8 py-4">
+                <div class="text-center max-w-xl mx-auto">
+                    <span class="text-roseRed-400 text-xs font-semibold uppercase tracking-widest">Little moments, one big story</span>
+                    <h2 class="font-serif text-3xl sm:text-4xl font-bold text-white mt-2">A Little Bit of Our Story</h2>
+                    <p class="text-roseRed-200/80 text-sm mt-3">Some chapters are small, but they mean everything.</p>
+                </div>
+                <div class="story-timeline max-w-2xl mx-auto">
+                    <article class="story-event reveal-on-scroll">
+                        <span class="story-marker"><i class="fa-solid fa-sparkles"></i></span>
+                        <div class="glass-card rounded-2xl p-5 sm:p-6">
+                            <span class="text-roseRed-400 text-xs uppercase tracking-[0.2em]">Chapter 01</span>
+                            <h3 class="font-serif text-xl text-white mt-1">The first hello</h3>
+                            <p class="text-roseRed-100/80 text-sm leading-relaxed mt-2">Awalnya cuma obrolan biasa kita di grup, gak nyangka bakal jadi sepenting ini. Tapi somehow, dari situ semuanya berubah, sejujurnya kalo dipikir terlalu cepat karena kita gak ada obrolan di roomchat kita sendiri, gak juga. Tanpa sadar kita selalu mencuri-curi kesempatan buat interaksi, sampai akhirnya kamu jadi bagian penting di hidup aku.</p>
+                        </div>
+                    </article>
+                    <article class="story-event reveal-on-scroll">
+                        <span class="story-marker"><i class="fa-solid fa-heart"></i></span>
+                        <div class="glass-card rounded-2xl p-5 sm:p-6">
+                            <span class="text-roseRed-400 text-xs uppercase tracking-[0.2em]">Chapter 02</span>
+                            <h3 class="font-serif text-xl text-white mt-1">Endless texting</h3>
+                            <p class="text-roseRed-100/80 text-sm leading-relaxed mt-2">Chat yang harusnya cuma basa basi, lama-lama makin intens ya? chat kita malah jadi panjang sampai lupa waktu. Literally balasan dan notif kamu selalu aku tunggu-tunggu and I didn't even realize how much I looked forward to it every single day. You genuinely making ordinary days feel warmer.</p>
+                        </div>
+                    </article>
+                    <article class="story-event reveal-on-scroll">
+                        <span class="story-marker"><i class="fa-solid fa-moon"></i></span>
+                        <div class="glass-card rounded-2xl p-5 sm:p-6">
+                            <span class="text-roseRed-400 text-xs uppercase tracking-[0.2em]">Chapter 03</span>
+                            <h3 class="font-serif text-xl text-white mt-1">Everything that happened</h3>
+                            <p class="text-roseRed-100/80 text-sm leading-relaxed mt-2">Dari yang awalnya lowk awkward jadi yang paling nyaman buat sekedar nyambat wkwkwk. Every little moment together started to feel like home, aku bahkan gak nyangka bisa senyaman itu sama satu orang. Sampai masa-masa berat yang harus kita lewatin bareng, yang beberapa hari bisa jadi jahat, but no matter how hard it gets kamu, kita, selalu tau apa yang kita mau.</p>
+                        </div>
+                    </article>
+                    <article class="story-event reveal-on-scroll">
+                        <span class="story-marker"><i class="fa-solid fa-infinity"></i></span>
+                        <div class="glass-card rounded-2xl p-5 sm:p-6">
+                            <span class="text-roseRed-400 text-xs uppercase tracking-[0.2em]">Chapter 04</span>
+                            <h3 class="font-serif text-xl text-white mt-1">Right here, right now</h3>
+                            <p class="text-roseRed-100/80 text-sm leading-relaxed mt-2">And now, in this your special day, aku pengin bilang that I'm so grateful semua cerita itu bawa kita ke sini. One day at a time, with more memories ahead and so much more story to write.</p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Stunning Memory Gallery -->
+            <div id="memory-gallery" class="space-y-6 reveal-on-scroll">
+                <div class="text-center max-w-xl mx-auto">
+                    <span class="text-roseRed-400 text-xs font-semibold uppercase tracking-widest">Precious Moments</span>
+                    <h2 class="font-serif text-3xl font-bold text-white mt-1">Memory Gallery</h2>
+                    <p class="text-roseRed-200/80 text-sm mt-2">A glimpse into our favorite chapters together.</p>
+                </div>
+
+                <!-- 3D circular memory-card carousel -->
+                <div class="memory-orbit-wrap">
+                    <div class="memory-orbit" id="memory-orbit" aria-label="Rotating memory gallery">
+                        <article class="orbit-card glass-card">
+                            <div class="orbit-card-photo">
+                                <img src="ks1.jpg" alt="The beginning" onerror="this.src='https://placehold.co/700x900/4c0519/fda4af?text=The+Beginning'">
+                            </div>
+                            <div class="orbit-card-copy"><span>01 · Love Frames</span><h3>Little Forever</h3><p>I'd keep every little moment with you, just to relive our sweetest memories.</p></div>
+                        </article>
+                        <article class="orbit-card glass-card">
+                            <div class="orbit-card-photo">
+                                <img src="ks2.jpg" alt="Adventures together" onerror="this.src='https://placehold.co/700x900/4c0519/fda4af?text=Our+Adventures'">
+                            </div>
+                            <div class="orbit-card-copy"><span>02 · Golden Day</span><h3>Born to Shine</h3><p>The world became a little brighter the day someone as wonderful as you was born.</p></div>
+                        </article>
+                        <article class="orbit-card glass-card">
+                            <div class="orbit-card-photo">
+                                <img src="ks3.jpg" alt="Quiet moments" onerror="this.src='https://placehold.co/700x900/4c0519/fda4af?text=Quiet+Moments'">
+                            </div>
+                            <div class="orbit-card-copy"><span>03 · Shared Universe</span><h3>Life & Love</h3><p>Even the simplest moments become my favorites with you.</p></div>
+                        </article>
+                        <article class="orbit-card glass-card">
+                            <div class="orbit-card-photo">
+                                <img src="ks4.jpg" alt="Making memories" onerror="this.src='https://placehold.co/700x900/4c0519/fda4af?text=Making+Memories'">
+                            </div>
+                            <div class="orbit-card-copy"><span>04 · Quiet Affection</span><h3>Closer Than Words</h3><p>Sometimes, the quietest moments say everything our hearts have been trying to express.</p></div>
+                        </article>
+                        <article class="orbit-card glass-card">
+                            <div class="orbit-card-photo">
+                                <img src="ks5.jpg" alt="Being close" onerror="this.src='https://placehold.co/700x900/4c0519/fda4af?text=Just+Us'">
+                            </div>
+                            <div class="orbit-card-copy"><span>05 · Just Us</span><h3>My Favorite Person</h3><p>There is something special about doing life beside you.</p></div>
+                        </article>
+                        <article class="orbit-card glass-card">
+                            <div class="orbit-card-photo">
+                                <img src="ks6.jpg" alt="More chapters" onerror="this.src='https://placehold.co/700x900/4c0519/fda4af?text=More+Chapters'">
+                            </div>
+                            <div class="orbit-card-copy"><span>06 · To Be Continued</span><h3>More Chapters Ahead</h3><p>Our story is still unfolding, one little moment at a time.</p></div>
+                        </article>
+                    </div>
+                </div>
+                <p class="memory-orbit-hint"><i class="fa-solid fa-rotate mr-2"></i>A little universe of memories, turning just for us</p>
+            </div>
+
+            <!-- Footer Note -->
+            <div class="text-center pt-8 pb-16 text-roseRed-400/60 text-xs space-y-2 border-t border-roseRed-900/40">
+                <p>Created with infinite love for your special day.</p>
+                <p class="font-serif text-roseRed-300 text-sm">I love you, sayang.</p>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- 1. Falling Petals Generator ---
+        function createPetals() {
+            const container = document.getElementById('petals-container');
+            const petalCount = 20;
+            
+            for (let i = 0; i < petalCount; i++) {
+                const petal = document.createElement('div');
+                petal.classList.add('petal');
+                
+                // Random properties
+                const size = Math.random() * 12 + 8;
+                const leftPos = Math.random() * 100;
+                const animDuration = Math.random() * 6 + 4;
+                const animDelay = Math.random() * 5;
+                
+                petal.style.width = `${size}px`;
+                petal.style.height = `${size * 1.4}px`;
+                petal.style.left = `${leftPos}%`;
+                petal.style.animationDuration = `${animDuration}s`;
+                petal.style.animationDelay = `${animDelay}s`;
+                
+                container.appendChild(petal);
+            }
+        }
+        createPetals();
+
+        // --- 2. Phone Lock Screen & Passcode Logic ---
+        function updateLockScreenClock() {
+            const now = new Date();
+            const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+            const date = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+            document.getElementById('lockscreen-clock').textContent = time;
+            document.getElementById('lockscreen-status-time').textContent = time;
+            document.getElementById('lockscreen-date').textContent = date;
+        }
+        updateLockScreenClock();
+        setInterval(updateLockScreenClock, 1000);
+
+        function updatePasscodeDots() {
+            const value = document.getElementById('secret-input').value;
+            document.querySelectorAll('.passcode-dot').forEach((dot, index) => {
+                dot.classList.toggle('filled', index < value.length);
+            });
+            document.getElementById('error-message').classList.add('hidden');
+        }
+
+        function addPasscodeDigit(digit) {
+            const input = document.getElementById('secret-input');
+            if (input.value.length >= 6) return;
+            input.value += digit;
+            updatePasscodeDots();
+            if (input.value.length === 6) {
+                setTimeout(() => handlePasswordSubmit({ preventDefault() {} }), 180);
+            }
+        }
+
+        function clearPasscode() {
+            const input = document.getElementById('secret-input');
+            input.value = input.value.slice(0, -1);
+            updatePasscodeDots();
+        }
+
+        function handlePasswordSubmit(event) {
+            event.preventDefault();
+            const inputVal = document.getElementById('secret-input').value.trim();
+            const errorMsg = document.getElementById('error-message');
+
+            if (inputVal === '050426') {
+                errorMsg.classList.add('hidden');
+                document.getElementById('lock-icon').className = 'fa-solid fa-lock-open text-2xl text-roseRed-100';
+
+                const page1 = document.getElementById('page-password');
+                const page2 = document.getElementById('page-gift');
+
+                page1.style.opacity = '0';
+                setTimeout(() => {
+                    page1.classList.add('hidden');
+                    page2.classList.remove('hidden');
+                    page2.style.opacity = '0';
+                    setTimeout(() => {
+                        page2.style.opacity = '1';
+                    }, 50);
+                }, 500);
+            } else {
+                const input = document.getElementById('secret-input');
+                input.value = '';
+                updatePasscodeDots();
+                errorMsg.classList.remove('hidden');
+                const dots = document.getElementById('passcode-dots');
+                dots.classList.remove('passcode-shake');
+                void dots.offsetWidth;
+                dots.classList.add('passcode-shake');
+            }
+        }
+
+        // --- 3. Gift Box Opening & Burst Animation ---
+        let isGiftOpened = false;
+        function openGiftBox() {
+            if (isGiftOpened) return;
+            isGiftOpened = true;
+            
+            const giftBox = document.getElementById('gift-box');
+            giftBox.classList.add('open');
+            
+            // Create flower burst effect
+            const burstContainer = document.getElementById('flower-burst');
+            for (let i = 0; i < 15; i++) {
+                const icon = document.createElement('div');
+                icon.innerHTML = '<i class="fa-solid fa-spa text-roseRed-300"></i>';
+                icon.className = 'absolute text-xl transition-all duration-1000 transform';
+                
+                const angle = Math.random() * Math.PI * 2;
+                const distance = Math.random() * 80 + 40;
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance;
+                
+                icon.style.transform = `translate(0px, 0px) scale(0.5)`;
+                burstContainer.appendChild(icon);
+                
+                setTimeout(() => {
+                    icon.style.transform = `translate(${tx}px, ${ty}px) scale(1.2) rotate(${Math.random() * 360}deg)`;
+                    icon.style.opacity = '0';
+                }, 50);
+            }
+
+            // Start the ambient melody directly from the gift-box tap.
+            const song = document.getElementById('birthday-song');
+            song.play();
+
+            // Reveal the proceed button after the gift opens.
+            setTimeout(() => {
+                const proceedBtn = document.getElementById('proceed-btn-container');
+                proceedBtn.style.opacity = '1';
+                proceedBtn.style.pointerEvents = 'auto';
+            }, 600);
+        }
+
+        // --- 4. Web Audio API Ambient Romantic Music ---
+        let audioCtx = null;
+        let isPlaying = false;
+        let oscillatorInterval = null;
+
+        function startAmbientMelody() {
+            if (isPlaying) return;
+            try {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                isPlaying = true;
+                playAmbientMelody();
+            } catch (e) {
+                console.error('Ambient audio could not start:', e);
+            }
+        }
+
+        function playAmbientMelody() {
+            const chords = [
+                [261.63, 329.63, 392.00], // C major
+                [220.00, 261.63, 329.63], // A minor
+                [174.61, 220.00, 261.63], // F major
+                [196.00, 246.94, 293.66]  // G major
+            ];
+            let chordIndex = 0;
+
+            function playChord() {
+                if (!isPlaying || !audioCtx) return;
+                const currentChord = chords[chordIndex];
+                chordIndex = (chordIndex + 1) % chords.length;
+
+                currentChord.forEach(freq => {
+                    try {
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+                        gain.gain.setValueAtTime(0.01, audioCtx.currentTime);
+                        gain.gain.exponentialRampToValueAtTime(0.08, audioCtx.currentTime + 1);
+                        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 3.5);
+
+                        osc.connect(gain);
+                        gain.connect(audioCtx.destination);
+
+                        osc.start();
+                        osc.stop(audioCtx.currentTime + 3.6);
+                    } catch(err) {}
+                });
+            }
+
+            playChord();
+            oscillatorInterval = setInterval(playChord, 3800);
+        }
+
+        function stopAmbientMelody() {
+            if (oscillatorInterval) {
+                clearInterval(oscillatorInterval);
+                oscillatorInterval = null;
+            }
+            if (audioCtx) {
+                audioCtx.close();
+                audioCtx = null;
+            }
+        }
+
+        // --- 5. Transition to Page 3 ---
+        function goToPage3() {
+            const page2 = document.getElementById('page-gift');
+            const page3 = document.getElementById('page-main');
+
+            page2.style.opacity = '0';
+            setTimeout(() => {
+                page2.classList.add('hidden');
+                page3.classList.remove('hidden');
+                page3.style.opacity = '0';
+                setTimeout(() => {
+                    page3.style.opacity = '1';
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }, 50);
+            }, 500);
+        }
+
+        // --- 6. Interactive Wishes ---
+        const wishes = {
+            1: "May your days be filled with endless laughter, warm memories, and the quiet assurance that you are deeply adored.",
+            2: "I wish for all your unspoken dreams to blossom and come true this year, with me right by your side to witness your triumph.",
+            3: "May our bond grow stronger, sweeter, and more resilient with every passing sunrise and starry night.",
+            4: "I wish you infinite health, boundless joy, and a heart that always knows how wonderfully special you are to me."
+        };
+
+        function openWish(id) {
+            const display = document.getElementById('wish-display');
+            const text = document.getElementById('wish-text');
+            
+            display.classList.remove('hidden');
+            text.textContent = `"${wishes[id]}"`;
+            display.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // --- 7. Scroll reveal and rotating Memory Gallery photos ---
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.12 });
+        document.querySelectorAll('.reveal-on-scroll').forEach((element, index) => {
+            element.style.transitionDelay = `${(index % 4) * 90}ms`;
+            revealObserver.observe(element);
+        });
+
+        // Arrange memory cards around a 3D ring. The ring rotates as one object.
+        const memoryOrbit = document.getElementById('memory-orbit');
+        if (memoryOrbit) {
+            const orbitCards = Array.from(memoryOrbit.querySelectorAll('.orbit-card'));
+            const orbitRadius = () => window.matchMedia('(max-width: 640px)').matches ? 220 : 330;
+            const positionOrbitCards = () => {
+                const radius = orbitRadius();
+                const step = 360 / orbitCards.length;
+                orbitCards.forEach((card, index) => {
+                    card.style.transform = `rotateY(${index * step}deg) translateZ(${radius}px)`;
+                });
+            };
+            positionOrbitCards();
+            window.addEventListener('resize', positionOrbitCards, { passive: true });
+        }
+
+        // --- 8. Live Relationship Counter Timer ---
+        const startDate = new Date('2024-01-01T00:00:00');
+
+        function updateTimer() {
+            const now = new Date();
+            const diff = now - startDate;
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const mins = Math.floor((diff / 1000 / 60) % 60);
+            const secs = Math.floor((diff / 1000) % 60);
+
+            document.getElementById('days-count').textContent = '7670';
+            document.getElementById('hours-count').textContent = String(hours).padStart(2, '0');
+            document.getElementById('mins-count').textContent = String(mins).padStart(2, '0');
+            document.getElementById('secs-count').textContent = String(secs).padStart(2, '0');
+        }
+
+        setInterval(updateTimer, 1000);
+        updateTimer();
+    </script>
+    <audio id="birthday-song" loop>
+  <source src="semua-aku-dirayakan.mp3" type="audio/mpeg">
+</audio>
+</body>
+</html>
